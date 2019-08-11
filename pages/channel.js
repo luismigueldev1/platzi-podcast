@@ -70,17 +70,23 @@ function Channel({ channel, audios, series }) {
 
 Channel.getInitialProps = async ({ query }) => {
     const idChannel = query.id
-    const reqChannel = await fetch(`https://api.audioboom.com/channels/${idChannel}`)
+
+    const [reqChannel, reqAudios, reqSeries] = await Promise.all([
+        fetch(`https://api.audioboom.com/channels/${idChannel}`),
+        fetch(`https://api.audioboom.com/channels/${idChannel}/audio_clips`),
+        fetch(`https://api.audioboom.com/channels/${idChannel}/child_channels`)
+    ])
+
     const dataChannel = await reqChannel.json()
     const channel = dataChannel.body.channel
 
-    const reqAudios = await fetch(`https://api.audioboom.com/channels/${idChannel}/audio_clips`)
     const dataAudios = await reqAudios.json()
     const audios = dataAudios.body.audio_clips
 
-    const reqSeries = await fetch(`https://api.audioboom.com/channels/${idChannel}/child_channels`)
     const dataSeries = await reqSeries.json()
     const series = dataSeries.body.channels
+
+
     return { channel, audios, series }
 }
 export default Channel
