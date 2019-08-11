@@ -1,15 +1,19 @@
-import fetch from 'isomorphic-unfetch';
+import Link from 'next/link'
+import fetch from 'isomorphic-unfetch'
 
 function Home({ channels }) {
     return (
         <div>
-            <header> Podcast </header>
+            <header> Podcasts </header>
             <div className="channels">
                 {channels.map(channel => (
-                    <div className="channel" key={channel.id}>
-                        <img src={channel.urls.logo_image.original} alt=""/>
-                        <h2>{channel.title}</h2>
-                    </div>
+                    <Link href={`/channel?id=${channel.id}`} key={channel.id} prefetch>
+                        <a className="channel" >
+                            <img src={channel.urls.logo_image.original} alt=""/>
+                            <h2>{channel.title}</h2>
+                        </a>
+                    </Link>
+                    
                 )) 
                 }
             </div>
@@ -28,7 +32,7 @@ function Home({ channels }) {
                 padding: 15px;
                 grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             }
-            .channel {
+            a.channel {
                 display: block;
                 margin-bottom: 0.5em;
                 color: #333;
