@@ -37,6 +37,10 @@ function ChannelGrid({ channels }) {
                 margin: 0;
                 text-align: center;
                 }
+            h1 {
+                font-weight: 600;
+                padding: 15px;
+        }
         `}</style>
         </div>
     )

@@ -9,7 +9,6 @@ function Home({ channels }) {
          </Layout>
     )
 }
-
 Home.getInitialProps = async () => {
     const req = await fetch('https://api.audioboom.com/channels/recommended')
     const { body : channels} = await req.json()
