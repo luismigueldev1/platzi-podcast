@@ -3,15 +3,21 @@ import fetch from 'isomorphic-unfetch'
 import Layout from '../components/Layout'
 import ChannelGrid from '../components/ChannelGrid'
 import PodcastList from '../components/PodcastList'
+import PodcastPlayer from '../components/PodcastPlayer'
 import Error from './_error'
 
 
 function Channel({ channel, audios, series, statusCode }) {
   const [ openPodcast, setOpenPodcast ] = useState(null)
 
-  const handleOpenPodcast = (event, podcast) =>{
+  const handleOpenPodcast = (event, podcast) => {
     event.preventDefault()
     setOpenPodcast(podcast)
+  }
+
+  const handleClosePodcast = (event) => {
+    event.preventDefault()
+    setOpenPodcast(null)
   }
   if(statusCode !== 200){
     return <Error statusCode={statusCode}/>
@@ -21,7 +27,12 @@ function Channel({ channel, audios, series, statusCode }) {
     <Layout title={channel.title}>
       <div className="banner" style={{ backgroundImage: `url(${channel.urls.banner_image.original || channel.urls.logo_image.original})` }} />
 
-      {openPodcast && <div>Hay un podcast abierto</div>}
+      {openPodcast && 
+        <div className="modal">
+          <PodcastPlayer clip={openPodcast} onClose={handleClosePodcast}/>
+        </div>
+      }
+
       <h1>{channel.title}</h1>
       {series.length > 0 &&
         <>
@@ -49,6 +60,15 @@ function Channel({ channel, audios, series, statusCode }) {
         h1 {
           font-weight: 600;
           padding: 15px;
+        }
+        .modal{
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: rgba(0,0,0,.4);
+          z-index: 99999;
         }
         `}</style>
     </Layout>
