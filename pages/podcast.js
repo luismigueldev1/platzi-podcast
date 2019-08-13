@@ -1,5 +1,6 @@
 import 'isomorphic-unfetch'
-import Link from 'next/link'
+import { Link } from '../routes'
+import slug from '../helpers/slug'
 
 function Podcast({ clip }) {
   return (
@@ -7,7 +8,10 @@ function Podcast({ clip }) {
       <div className='modal'>
         <div className='clip'>
           <nav>
-            <Link href={`/channel?id=${clip.channel.id}`}>
+            <Link route="channel" params= {{
+              slug: slug(clip.channel.title),
+              id: clip.channel.id
+              }}>
               <a className='close'>&lt; Volver</a>
             </Link>
           </nav>

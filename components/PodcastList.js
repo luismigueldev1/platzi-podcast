@@ -1,10 +1,18 @@
-import Link from 'next/link'
+import { Link } from '../routes'
+import slug from '../helpers/slug';
 function PodcastList({ audios }) {
   return (
     <>
       <h2>Ultimos Podcasts</h2>
       {audios.map((audio) => (
-        <Link href={`/podcast?id=${audio.id}`} prefetch key={audio.id}>
+        <Link route="podcast" params={{
+          slugChannel : slug(audio.channel.title),
+          idChannel : audio.channel.id,
+          slug: slug(audio.title),
+          id: audio.id
+          }} 
+          prefetch key={audio.id}
+          >
           <a className='podcast'>
             <h3>{audio.title}</h3>
             <div className='meta'>
