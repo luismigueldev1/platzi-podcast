@@ -1,11 +1,15 @@
-import Link from 'next/link'
 import fetch from 'isomorphic-unfetch'
 import Layout from '../components/Layout'
 import ChannelGrid from '../components/ChannelGrid'
 import PodcastList from '../components/PodcastList'
+import Error from './_error'
 
 
-function Channel({ channel, audios, series }) {
+function Channel({ channel, audios, series, statusCode }) {
+  if(statusCode !== 200){
+    return <Error statusCode={statusCode}/>
+  }
+
   return (
     <Layout title={channel.title}>
       <div className="banner" style={{ backgroundImage: `url(${channel.urls.banner_image.original || channel.urls.logo_image.original})` }} />
@@ -42,26 +46,33 @@ function Channel({ channel, audios, series }) {
   )
 }
 
-Channel.getInitialProps = async ({ query }) => {
+Channel.getInitialProps = async ({ query, res }) => {
   const idChannel = query.id
+  try{
+    const [reqChannel, reqAudios, reqSeries] = await Promise.all([
+      fetch(`https://api.audioboom.com/channels/${idChannel}`),
+      fetch(`https://api.audioboom.com/channels/${idChannel}/audio_clips`),
+      fetch(`https://api.audioboom.com/channels/${idChannel}/child_channels`)
+    ])
+    if(reqChannel.status >= 400){
+      res.statusCode = reqChannel.status
+      return { channel: null, audio: null, series: null, statusCode: 404}
+    }
+    const dataChannel = await reqChannel.json()
+    const channel = dataChannel.body.channel
+  
+    const dataAudios = await reqAudios.json()
+    const audios = dataAudios.body.audio_clips
+  
+    const dataSeries = await reqSeries.json()
+    const series = dataSeries.body.channels
 
-  const [reqChannel, reqAudios, reqSeries] = await Promise.all([
-    fetch(`https://api.audioboom.com/channels/${idChannel}`),
-    fetch(`https://api.audioboom.com/channels/${idChannel}/audio_clips`),
-    fetch(`https://api.audioboom.com/channels/${idChannel}/child_channels`)
-  ])
+    return { channel, audios, series, statusCode: 200 }
 
-  const dataChannel = await reqChannel.json()
-  const channel = dataChannel.body.channel
-
-  const dataAudios = await reqAudios.json()
-  const audios = dataAudios.body.audio_clips
-
-  const dataSeries = await reqSeries.json()
-  const series = dataSeries.body.channels
-
-
-  return { channel, audios, series }
+  }catch(error){
+    return { channel: null, audio: null, series: null, statusCode: 503}
+  }
+  
 }
 
 export default Channel
