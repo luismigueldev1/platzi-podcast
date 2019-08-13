@@ -4,7 +4,7 @@ App de podcast desarrollada con Next.JS integrada con la API de AudioBoom
 
 ![Captura de la vista Home](./.readme_static/home.png)
 ![Captura de vista Channel](./.readme_static/channel.png)
-![Captura de Player](./.readme/static_player.png)
+![Captura de Player](./.readme_static/player.png)
 
 ## ¿Cómo funciona?
 
