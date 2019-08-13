@@ -1,6 +1,6 @@
 import { Link } from '../routes'
 import slug from '../helpers/slug';
-function PodcastList({ audios }) {
+function PodcastList({ audios, openPodcast }) {
   return (
     <>
       <h2>Ultimos Podcasts</h2>
@@ -12,8 +12,10 @@ function PodcastList({ audios }) {
           id: audio.id
           }} 
           prefetch key={audio.id}
+        >
+          <a className='podcast' 
+            onClick={event => openPodcast(event, audio)}
           >
-          <a className='podcast'>
             <h3>{audio.title}</h3>
             <div className='meta'>
               {Math.ceil(audio.duration / 60)} minutes

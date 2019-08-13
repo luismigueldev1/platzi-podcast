@@ -1,3 +1,4 @@
+import React, {useState} from 'react'
 import fetch from 'isomorphic-unfetch'
 import Layout from '../components/Layout'
 import ChannelGrid from '../components/ChannelGrid'
@@ -6,6 +7,12 @@ import Error from './_error'
 
 
 function Channel({ channel, audios, series, statusCode }) {
+  const [ openPodcast, setOpenPodcast ] = useState(null)
+
+  const handleOpenPodcast = (event, podcast) =>{
+    event.preventDefault()
+    setOpenPodcast(podcast)
+  }
   if(statusCode !== 200){
     return <Error statusCode={statusCode}/>
   }
@@ -13,6 +20,8 @@ function Channel({ channel, audios, series, statusCode }) {
   return (
     <Layout title={channel.title}>
       <div className="banner" style={{ backgroundImage: `url(${channel.urls.banner_image.original || channel.urls.logo_image.original})` }} />
+
+      {openPodcast && <div>Hay un podcast abierto</div>}
       <h1>{channel.title}</h1>
       {series.length > 0 &&
         <>
@@ -20,7 +29,7 @@ function Channel({ channel, audios, series, statusCode }) {
           <ChannelGrid channels={series} />
         </>
       }
-      <PodcastList audios={audios}/>
+      <PodcastList audios={audios} openPodcast={handleOpenPodcast}/>
 
       <style jsx>{`
         .banner {
