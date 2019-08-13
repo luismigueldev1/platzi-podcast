@@ -14,7 +14,7 @@ Requiere Node.JS 10
 * `npm run dev` para el entorno de desarrollo
 * `npm run build && npm start` para el entorno de producción
 
-##Lincencia
+## Lincencia
 
 MIT
 
